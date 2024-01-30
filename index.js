@@ -75,13 +75,45 @@ app.post("/countryInfo", async (req, res) => {
             throw new Error('Failed to fetch country data');
         }
         const countryData = await response.json();
+
         console.log(countryData);
-        res.json(countryData);
+
+        const data = {
+            country: countryData[0].name.common,
+            area: countryData[0].area,
+            region: countryData[0].region,
+            languages: Object.values(countryData[0].languages).join(', '),
+            flag: countryData[0].flags.png,
+            latlng: countryData[0].latlng
+        }
+
+        console.log(data);
+        res.json(data);
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
-})
+});
+
+app.post('/cityWikipediaPage', async (req, res) => {
+    const { cityName } = req.body;
+
+    try {
+        const response = await fetch(`https://en.wikipedia.org/w/api.php?action=query&format=json&titles=${cityName}&prop=info&inprop=url`);
+        const data = await response.json();
+
+        console.log(data);
+        
+        const pages = data.query.pages;
+        const pageId = Object.keys(pages)[0];
+        const pageUrl = pages[pageId].fullurl;
+
+        res.json({ url: pageUrl });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Failed to fetch Wikipedia page URL' });
+    }
+});
 
 app.get("/about", (req, res) => {
     res.sendFile(path.join(__dirname, "pages/about.html"));
