@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <title>Assignment 2</title>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="nav-logo">Assignment 2</div>
+                <div class="nav-links">
+                    <a href="/" class="nav-link">Home</a>
+                    <a href="/about" class="nav-link">About</a>
+                </div>
+            </nav>
+            <div class="header-inner">
+                <div class="weather-title">Type city name to check weather</div>
+                <form action="/weather" method="POST">
+                    <div class="form-wrapper">
+                        <label for="city">Your city</label>
+                        <input type="text" name="city" id="cityInput" placeholder="Your city" required>
+                    </div>
+
+                    <input id="weatherBtn" type="button" value="Check weather" onclick="getWeather()">
+                </form>
+                <div class="info">
+                    <div id="weatherInfo"></div>
+                    <div class="countryInfo"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        async function getWeather() {
+            const city = document.getElementById('cityInput').value;
+
+            const response = await fetch('/weather', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ city })
+            });
+
+            const data = await response.json();
+
+            const weatherInfoDiv = document.getElementById('weatherInfo');
+            weatherInfoDiv.innerHTML = `
+                <h2>${city}</h2>
+                <img src="http://openweathermap.org/img/wn/${data.icon}.png" alt="Weather Icon">
+
+                <div class="wrapper">
+                    <p>Temperature</p>
+                    <p class="data">${data.temperature}°C</p>
+                </div>
+                <div class="wrapper">
+                    <p>Description</p>
+                    <p class="data">${data.description}</p>
+                </div>
+                <div class="wrapper">
+                    <p>Feels Like</p>
+                    <p class="data">${data.feelsLike}°C</p>
+                </div>
+                <div class="wrapper">
+                    <p>Humidity</p>
+                    <p class="data">${data.humidity}%</p>
+                </div>
+                <div class="wrapper">
+                    <p>Pressure</p>
+                    <p class="data">${data.pressure} hPa</p>
+                </div>
+                <div class="wrapper">
+                    <p>Wind Speed</p>
+                    <p class="data">${data.windSpeed} m/s</p>
+                </div>
+                <div class="wrapper">
+                    <p>Country Code</p>
+                    <p class="data">${data.countryCode}</p>
+                </div>
+                ${data.rainVolume ? `<div class="wrapper">
+                    <p>Rain Volume (last 1 hour)</p>
+                    <p class="data">${data.rainVolume} mm</p>
+                </div>` : '' }
+            `;
+            fetchCountryData(data.countryCode);
+        }
+
+        function fetchCountryData(countryCode) {
+            fetch('/countryInfo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ countryCode: countryCode })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch country data');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error fetching country data:', error);
+            });
+        }
+
+        // function displayCountryData(data) {
+        //     const countryDataContainer = document.getElementById('countryDataContainer');
+        //     countryDataContainer.innerHTML = '';
+
+        //     for (const key in data) {
+        //         if (Object.hasOwnProperty.call(data, key)) {
+        //             const element = data[key];
+        //             const paragraph = document.createElement('p');
+        //             paragraph.textContent = `${key}: ${element}`;
+        //             countryDataContainer.appendChild(paragraph);
+        //         }
+        //     }
+        // }
+    </script>
+</body>
+</html>

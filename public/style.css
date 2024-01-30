@@ -1,0 +1,87 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+nav {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+
+.nav-logo {
+    font-size: 30px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #000;
+    transition: color .2s linear;
+}
+
+.nav-link:hover {
+    color: #4b1d1d;
+}
+
+.about-inner {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.about-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.about-title {
+    font-size: 40px;
+}
+
+.api-name {
+    font-size: 20px;
+}
+.api-desc {
+    font-size: 14px;
+    font-style: italic;
+}
+
+.header-inner {
+    margin-top: 50px;
+}
+
+.weather-title {
+    font-size: 30px;
+    text-align: center;
+}
+
+.weatherInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+}
